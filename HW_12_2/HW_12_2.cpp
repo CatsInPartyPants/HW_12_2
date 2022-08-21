@@ -36,12 +36,13 @@ int greatest_common_divisor(int, int);
 //task 3
 
 void computer_guess(int* arr, int len);
+void user_guess_number(int* arr, int len);
+void game(int* comp_arr, int* user_arr, int len);
 
 
 
 int main()
 {   
-    /*
     //task 1
     int int_matrix[row][col];
     set_matrix(int_matrix);
@@ -83,17 +84,20 @@ int main()
     cin >> second;
 
     cout << "Greates common divisor for " << first << " and " << second << " is " << greatest_common_divisor(first, second);
-    */
+    
 
     //task 3
 
     srand(time(NULL));
     int computer_number[4];
-    int* user_gues = new int[4];
+    int user_guess[4];
     cout << "computer guessing the number...\n";
     Sleep(2000);
     cout << "Done. The number have 4 digits. Try to gues it->";
     computer_guess(computer_number, len);
+    cout << endl;
+    game(computer_number, user_guess, len);
+    
 
 }
 
@@ -260,11 +264,62 @@ int greatest_common_divisor(int a, int b)
 
 void computer_guess(int* arr, int len)
 {
+    int temp;    
+
     for (int i = 0; i < len; i++)
-    {       
-        *arr = 1 + rand() % 10;
-        Sleep(10);
-        cout << *arr;
-        arr++;
+    {
+        temp = 1 + rand() % 9;
+
+        while (temp == arr[0] || temp == arr[1] || temp == arr[2] || temp == arr[3])
+        {
+            temp = 1 + rand() % 9;
+        }
+        arr[i] = temp;
+        
     }
+}
+
+void user_guess_number(int* arr, int len)
+{
+    int user_number;
+    cout << "Please enter 4 digit number (numbers can not be the same)->";
+    cin >> user_number;
+    for(int i = len-1; i >= 0; i--)
+    {
+        arr[i] = user_number % 10;
+        user_number = user_number / 10;
+    }
+}
+
+void game(int* comp_arr, int* user_arr, int len)
+{
+    int bulls = 0;
+    int number_of_tries = 0;
+    while (bulls != 4)
+    {
+        int cows = 0;
+        bulls = 0;
+        user_guess_number(user_arr, len);
+        for (int i = 0; i < len; i++)
+        {
+            if (comp_arr[i] == user_arr[i])
+                bulls++;
+        }
+        for (int i = 0; i < len; i++)
+        {
+            for (int j = 0; j < len; j++)
+            {
+                if (comp_arr[i] == user_arr[j] && i != j)
+                    cows++;
+            }
+        }
+        for (int i = 0; i < len; i++)
+        {
+            cout << user_arr[i];
+        }
+        cout << " -> ";
+        cout << "cows = " << cows << " bulls = " << bulls << "." << endl;
+        number_of_tries++;
+    }
+    cout << "You win! Number of tries is " << number_of_tries << "." << endl;
 }
